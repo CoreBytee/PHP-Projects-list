@@ -5,11 +5,13 @@
     include __DIR__ . "/Classes/Project.php";
 ?>
 
-<?php 
+<?php
     $_SESSION["page"] = $_GET["page"] ?? 1;
     $_SESSION["showcount"] = $_GET["showcount"] ?? 5;
 
-    $_SESSION["projects"] = Project::GetProjects($_SESSION["showcount"], ($_SESSION["page"] - 1) * $_SESSION["showcount"]);
+    $_SESSION["projects"] = Project::GetProjects($_SESSION["showcount"], ($_SESSION["page"] - 1) * $_SESSION["showcount"], $_GET["search-input"] ?? "", $_GET["search-year"] ?? []);
+
+    echo json_encode($_GET);
 ?>
 
 <head>
@@ -22,14 +24,20 @@
 <body>
     <main>
         <div class="container">
-            <div class="d-flex justify-content-center align-items-center m-4">
-                <nav aria-label="search and filter">
-                    <input type="search" class="form-control ds-input" id="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-owns="algolia-autocomplete-listbox-0" dir="auto" style="position: relative; vertical-align: top;">
-                </nav>
+            <div class="d-flex justify-content-center flex-row align-items-center m-4">
+                <form aria-label="search and filter" action="/" method="GET" id="search-form">
+                    <input value="<?= htmlspecialchars($_GET['search-input'] ?? "") ?>" type="search" class="form-control ds-input" id="search-input" name="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-owns="algolia-autocomplete-listbox-0" dir="auto" style="position: relative; vertical-align: top;">
+                    <select name="search-year[]" id="search-year" class="form-control ds-input" form="search-form">
+                        <?php foreach (Project::GetPossibleYears() as $year) : ?>
+                            <option value="<?= $year ?>"><?= $year ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <button type="submit" class="btn btn-primary form-control">Search</button>
+                </form>
             </div>
             <div class="row row-cols-1 row-cols-sm-1 row-cols-md-1 g-1 projects">
-                <div id="project1" class="project card shadow-sm card-body m-2">
-                    <?php foreach ($_SESSION["projects"] as $project) :?>
+                <?php foreach ($_SESSION["projects"] as $project) : ?>
+                    <div id="project1" class="project card shadow-sm card-body m-2" style="cursor: pointer;" onclick="location.href='/detail?id=<?= $project->Id ?>'">
                         <div class="card-text">
                             <h2><?= $project->Title ?></h2>
                             <div><?= $project->Description ?></div>
@@ -47,8 +55,8 @@
                                 </button>
                             </div>
                         </div>
-                    <?php endforeach; ?>
-                </div>
+                    </div>
+                <?php endforeach; ?>
             </div>
 
             <div class="d-flex justify-content-center align-items-center m-4">
