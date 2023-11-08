@@ -33,6 +33,13 @@
             $Project = new Project($Row);
             return $Project;
         }
+    public static function GetPageCount() {
+        $Statement = $_SESSION["ProjectStatements"]["GetPageCount"];
+        $Statement->execute();
+
+        return ceil($Statement->fetchAll()[0][0] / 5);
+    }
+
 
         public static function GetProjects($Count, $From) {
             $Statement = $_SESSION["ProjectStatements"]["GetProjects"];

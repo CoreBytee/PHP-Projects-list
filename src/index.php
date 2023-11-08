@@ -54,13 +54,22 @@
             <div class="d-flex justify-content-center align-items-center m-4">
                 <nav aria-label="Page navigation example">
                     <ul class="pagination">
-                        <li class="page-item">
-                            <a class="page-link" href="#">Previous</a>
-                        </li>
-                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                        <?php
+                            $CurrentPage = $_SESSION["page"];
+                            $PageCount = Project::GetPageCount();
+
+                            if ($CurrentPage != 1) {
+                                echo '<li class="page-item"><a class="page-link" href="?page=' . ($CurrentPage - 1) . '">Previous</a></li>';
+                            }
+
+                            for ($i = 1; $i < $PageCount + 1; $i++) {
+                                echo '<li class="page-item"><a class="page-link" href="?page=' . $i . '">' . $i . '</a></li>';
+                            }
+
+                            if ($CurrentPage != $PageCount) {
+                                echo '<li class="page-item"><a class="page-link" href="?page=' . ($CurrentPage + 1) . '">Next</a></li>';
+                            }
+                        ?>
                     </ul>
                 </nav>
             </div>
