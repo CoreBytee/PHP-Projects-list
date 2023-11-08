@@ -2,7 +2,7 @@
 <html lang="en">
 
 <?php
-    include __DIR__ . "/Classes/Project.php";
+    include __DIR__ . "/../Classes/Project.php";
 ?>
 
 <?php 
