@@ -4,11 +4,17 @@ include __DIR__ . "/../Helpers/GetConnection.php";
 $_SESSION["ProjectStatements"] = [
     "GetProjectById" => $DatabaseConnection->prepare("SELECT * FROM projects WHERE Id = :Id"),
     "GetPossibleYears" => $DatabaseConnection->prepare("SELECT DISTINCT Year FROM projects ORDER BY Year DESC"),
-    "GetPageCount" => $DatabaseConnection->prepare("SELECT COUNT(*) FROM projects"),
     "GetProjects" => $DatabaseConnection->prepare("SELECT * FROM projects LIMIT :limitcount OFFSET :fromcount"),
+    "GetProjectsCount" => $DatabaseConnection->prepare("SELECT COUNT(*) FROM projects"),
     "GetProjectsSearch" => $DatabaseConnection->prepare("SELECT * FROM projects WHERE Title LIKE :search LIMIT :limitcount OFFSET :fromcount"),
+    "GetProjectsSearchCount" => $DatabaseConnection->prepare("SELECT COUNT(*) FROM projects WHERE Title LIKE :search AND Year IN (:years)"),
     "GetProjectsYear" => $DatabaseConnection->prepare("SELECT * FROM projects WHERE Year IN (:years) LIMIT :limitcount OFFSET :fromcount"),
+    "GetProjectsYearCount" => $DatabaseConnection->prepare("SELECT COUNT(*) FROM projects WHERE Year IN (:years)"),
     "GetProjectsSearchYear" => $DatabaseConnection->prepare("SELECT * FROM projects WHERE Title LIKE :search AND Year IN (:years) LIMIT :limitcount OFFSET :fromcount"),
+    "GetProjectsSearchYearCount" => $DatabaseConnection->prepare("SELECT COUNT(*) FROM projects WHERE Title LIKE :search AND Year IN (:years)"),
+    "CreateProject" => $DatabaseConnection->prepare("INSERT INTO projects (Title, Type, Year, Description, Body, Image) VALUES (:Title, :Type, :Year, :Description, :Body, :Image)"),
+    "UpdateProject" => $DatabaseConnection->prepare("UPDATE projects SET Title = :Title, Type = :Type, Year = :Year, Description = :Description, Body = :Body, Image = :Image WHERE Id = :Id"),
+    "DeleteProject" => $DatabaseConnection->prepare("DELETE FROM projects WHERE Id = :Id")
 ];
 
 class Project
@@ -19,6 +25,7 @@ class Project
     public $Year;
     public $Description;
     public $Body;
+    public $Image;
 
     public function __construct($Data)
     {
@@ -110,9 +117,13 @@ class Project
         $Statement->bindParam(":Id", $Id, PDO::PARAM_INT);
         $Statement->execute();
 
-        $Row = $Statement->fetchAll()[0];
+        $Rows = $Statement->fetchAll();
 
-        $Project = new Project($Row);
+        if (count($Rows) == 0) {
+            return null;
+        }
+
+        $Project = new Project($Rows[0]);
         return $Project;
     }
 
