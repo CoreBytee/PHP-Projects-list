@@ -28,6 +28,40 @@ class Project
         $this->Year = $Data["Year"] ?? null;
         $this->Description = $Data["Description"] ?? null;
         $this->Body = $Data["Body"] ?? null;
+        $this->Image = $Data["Image"] ?? null;
+    }
+
+    public function Save() {
+        $Statement = $_SESSION["ProjectStatements"]["UpdateProject"];
+        $Statement->bindParam(":Id", $this->Id, PDO::PARAM_INT);
+        $Statement->bindParam(":Title", $this->Title, PDO::PARAM_STR);
+        $Statement->bindParam(":Type", $this->Type, PDO::PARAM_STR);
+        $Statement->bindParam(":Year", $this->Year, PDO::PARAM_INT);
+        $Statement->bindParam(":Description", $this->Description, PDO::PARAM_STR);
+        $Statement->bindParam(":Body", $this->Body, PDO::PARAM_STR);
+        $Statement->bindParam(":Image", $this->Image, PDO::PARAM_STR);
+
+        $Statement->execute();
+    }
+
+    public function Delete() {
+        $Statement = $_SESSION["ProjectStatements"]["DeleteProject"];
+        $Statement->bindParam(":Id", $this->Id, PDO::PARAM_INT);
+        $Statement->execute();
+    }
+
+    public static function CreateProject($Title, $Type, $Year, $Description, $Body) {
+        $Statement = $_SESSION["ProjectStatements"]["CreateProject"];
+        $Statement->bindParam(":Title", $Title, PDO::PARAM_STR);
+        $Statement->bindParam(":Type", $Type, PDO::PARAM_STR);
+        $Statement->bindParam(":Year", $Year, PDO::PARAM_INT);
+        $Statement->bindParam(":Description", $Description, PDO::PARAM_STR);
+        $Statement->bindParam(":Body", $Body, PDO::PARAM_STR);
+        $Statement->execute();
+
+        // $Row = $Statement->fetchAll()[0];
+
+        // return new Project($Row);
     }
 
     public static function GetPossibleYears()
