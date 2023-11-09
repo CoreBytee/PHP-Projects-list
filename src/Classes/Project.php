@@ -79,8 +79,26 @@ class Project
         return $Rows;
     }
 
-    public static function GetPageCount() {
-        $Statement = $_SESSION["ProjectStatements"]["GetPageCount"];
+    public static function GetPageCount($Search, $Years = []) {
+        if ($Search != "" && count($Years) > 0) {
+            $Statement = $_SESSION["ProjectStatements"]["GetProjectsSearchYearCount"];
+        } else if ($Search != "") {
+            $Statement = $_SESSION["ProjectStatements"]["GetProjectsSearchCount"];
+        } else if (count($Years) > 0) {
+            $Statement = $_SESSION["ProjectStatements"]["GetProjectsYearCount"];
+        } else {
+            $Statement = $_SESSION["ProjectStatements"]["GetProjectsCount"];
+        }
+
+        if ($Search != "") {
+            $Search = "%" . $Search . "%";
+            $Statement->bindParam(":search", $Search, PDO::PARAM_STR);
+        }
+
+        if (count($Years) > 0) {
+            $Statement->bindValue(":years", implode("', '", $Years), PDO::PARAM_STR);
+        }
+
         $Statement->execute();
 
         return ceil($Statement->fetchAll()[0][0] / 5);
