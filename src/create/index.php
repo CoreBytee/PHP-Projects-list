@@ -10,21 +10,25 @@ if (!($CurrentUser->IsAdmin ?? 0)) {
     header("Location: /");
 }
 
-$CurrentProject = Project::GetProjectById($_GET["id"] ?? "");
-
 if ($_POST) {
+    $ImageHash = md5_file($_FILES["image"]["tmp_name"]);    
+    move_uploaded_file($_FILES["image"]["tmp_name"], __DIR__ . "/../images/" . $ImageHash . ".png");
+    echo json_encode($_POST);
     if ($_POST["id"] ?? "") {
+        $CurrentProject = Project::GetProjectById($_POST["id"]);
         $CurrentProject->Title = $_POST["title"];
         $CurrentProject->Description = $_POST["description"];
         $CurrentProject->Body = $_POST["body"];
         $CurrentProject->Type = $_POST["type"];
         $CurrentProject->Year = $_POST["year"];
-        $CurrentProject->Image = $_POST["image"];
+        $CurrentProject->Image = $ImageHash;
         $CurrentProject->Save();
     } else {
-        Project::CreateProject($_POST["title"], $_POST["type"], $_POST["year"], $_POST["description"], $_POST["body"], $_FILES["image"]);
+        Project::CreateProject($_POST["title"], $_POST["type"], $_POST["year"], $_POST["description"], $_POST["body"], $ImageHash);
     }
-    header("Location: /");
+    // header("Location: /");
+} else {
+    $CurrentProject = Project::GetProjectById($_GET["id"] ?? "");
 }
 ?>
 

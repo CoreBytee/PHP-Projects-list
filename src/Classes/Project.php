@@ -57,13 +57,14 @@ class Project
         $Statement->execute();
     }
 
-    public static function CreateProject($Title, $Type, $Year, $Description, $Body) {
+    public static function CreateProject($Title, $Type, $Year, $Description, $Body, $Image) {
         $Statement = $_SESSION["ProjectStatements"]["CreateProject"];
         $Statement->bindParam(":Title", $Title, PDO::PARAM_STR);
         $Statement->bindParam(":Type", $Type, PDO::PARAM_STR);
         $Statement->bindParam(":Year", $Year, PDO::PARAM_INT);
         $Statement->bindParam(":Description", $Description, PDO::PARAM_STR);
         $Statement->bindParam(":Body", $Body, PDO::PARAM_STR);
+        $Statement->bindParam(":Image", $Image, PDO::PARAM_STR);
         $Statement->execute();
 
         // $Row = $Statement->fetchAll()[0];
