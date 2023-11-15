@@ -13,7 +13,6 @@ if (!($CurrentUser->IsAdmin ?? 0)) {
 if ($_POST) {
     $ImageHash = md5_file($_FILES["image"]["tmp_name"]);    
     move_uploaded_file($_FILES["image"]["tmp_name"], __DIR__ . "/../images/" . $ImageHash . ".png");
-    echo json_encode($_POST);
     if ($_POST["id"] ?? "") {
         $CurrentProject = Project::GetProjectById($_POST["id"]);
         $CurrentProject->Title = $_POST["title"];
@@ -26,7 +25,7 @@ if ($_POST) {
     } else {
         Project::CreateProject($_POST["title"], $_POST["type"], $_POST["year"], $_POST["description"], $_POST["body"], $ImageHash);
     }
-    // header("Location: /");
+    header("Location: /");
 } else {
     $CurrentProject = Project::GetProjectById($_GET["id"] ?? "");
 }
