@@ -50,7 +50,7 @@ if ($_POST) {
             </div>
             <div class="card shadow-sm card-body m-2">
                 <form action="/create" method="post" enctype="multipart/form-data">
-                    <input id="id" type="number" class="form-control ds-input" value="<?= $_GET["id"] ?? "" ?>" hidden>
+                    <input id="id" name="id" type="number" class="form-control ds-input" value="<?= $_GET["id"] ?? "" ?>" hidden>
 
                     <label for="title">Title</label>
                     <input id="title" name="title" type="text" class="form-control" value="<?= $CurrentProject->Title ?? "" ?>">
