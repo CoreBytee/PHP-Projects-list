@@ -2,11 +2,12 @@
 <html lang="en">
 
 <?php
-    include __DIR__ . "/../Classes/Project.php";
+include __DIR__ . "/../Classes/Project.php";
+include __DIR__ . "/../Classes/User.php";
 ?>
 
-<?php 
-    $project = Project::GetProjectById($_GET["id"]);
+<?php
+$project = Project::GetProjectById($_GET["id"]);
 ?>
 
 <head>
@@ -19,13 +20,22 @@
 <body>
     <main>
         <div class="container">
+            <div class="d-flex flex-row card shadow-sm p-4 m-4 justify-content-sm-start">
+                <button class="btn btn-primary" onclick="location.href='/'">Home</button>
+                <?php
+                User::EchoLoginButton();
+                ?>
+            </div>
             <div class="row row-cols-1 row-cols-sm-1 row-cols-md-1 g-1 projects">
+
                 <div id="project1" class="project card shadow-sm card-body m-2">
                     <div class="card-text">
                         <h2><?= $project->Title ?></h2>
                         <div><?= $project->Body ?></div>
                         <div>Type: <?= $project->Type ?></div>
                         <div>Jaar: <?= $project->Year ?></div>
+
+                        <img src="/viewimage?hash=<?= $project->Image ?>" alt="">
                     </div>
                 </div>
             </div>

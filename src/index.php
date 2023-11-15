@@ -53,9 +53,6 @@
                         <div class="d-flex justify-content-between align-items-center mt-3">
                             <?php if ($CurrentUser->IsAdmin ?? 0): ?>
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary">
-                                        View
-                                    </button>
                                     <button type="button" class="btn btn-sm btn-outline-secondary" onclick="location.href='/create?id=<?= $project->Id ?>'">
                                         Edit
                                     </button>
